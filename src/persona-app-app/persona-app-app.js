@@ -104,7 +104,7 @@ class PersonaAppApp extends PolymerElement {
   <div class = "container app-container">
     <responsive-grid-row>
       <responsive-grid-col xl="3" lg="3" md="4" sm="12" xs="12">
-          <persona-form-element id = "formPersona"></persona-form-element>
+          <persona-form-element id = "formPersona" persona = {{persona}} ></persona-form-element>
       </responsive-grid-col>
       <responsive-grid-col xl="9" lg="9" md="8" sm="12" xs="12">
       <persona-list-element id = "listPersona" personas = "{{personas}}" ></persona-list-element>
@@ -172,11 +172,12 @@ class PersonaAppApp extends PolymerElement {
 
   _personaDelete(event) {
     console.log('_personaDelete', event);
+    let displayPersona = `${event.detail.persona.nombres} ${event.detail.persona.apellidos}`; 
     this.persona = event.detail.persona;
       this.$.personaService.delete(
         this.persona._id,
         (xhr) => {
-          this.message = 'Se eliminó a,'
+          this.message = `Se eliminó a, ${displayPersona}`
           this.$.notification.open();
           this._loadPersonas();
           event.detail.fnSuccess(false);
@@ -198,9 +199,18 @@ class PersonaAppApp extends PolymerElement {
     this._loadPersonas();
   }
 
+  _changePersonaApp(newValue, oldValue){
+    console.log('_changePersonaApp',newValue, oldValue);
+    this.enableUpdate = (newValue && newValue._id ? true : false)
+  }
+
   static get properties() {
     return {
-      persona: Object,
+      persona: {
+        type: Object,
+        observer: '_changePersonaApp',
+        value: {}
+      },
       message: String,
       enableUpdate: {
         type: Boolean,
