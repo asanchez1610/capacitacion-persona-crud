@@ -131,12 +131,13 @@ class PersonaAppApp extends PolymerElement {
   _personaCreate(event) {
     console.log('_personaCreate', event.detail);
     this.persona = event.detail.persona;
+    let displayPersona = `${event.detail.persona.nombres} ${event.detail.persona.apellidos}`; 
     if (this.enableUpdate) {
       this.$.personaService.update(
         this.persona._id,
         this.persona,
         (xhr) => {
-          this.message = 'Se actualizó a,'
+          this.message = `Se actualizó a, ${displayPersona}`
           this.$.notification.open();
           this._loadPersonas();
           event.detail.fnSuccess(false);
@@ -147,7 +148,7 @@ class PersonaAppApp extends PolymerElement {
       this.$.personaService.create(
         this.persona,
         (xhr) => {
-          this.message = 'Se agregó a,'
+          this.message = `Se agregó a, ${displayPersona}`
           this.$.notification.open();
           event.detail.fnSuccess(true);
           this._loadPersonas();
